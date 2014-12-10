@@ -1,3 +1,6 @@
+#load "dynlink.cma"
+#load "camlp4o.cma"
+
 type dico = Noeud of dico array * bool | Feuille
 
 let dico_vide = Noeud((Array.make 26 Feuille), false)
@@ -46,6 +49,22 @@ remove x dico_vide ;;
 member "" dico_vide;;
 member x dico_vide ;; **)
 
-(**
-let of_stream (cs : char Stream.t) : dico =;;
-let to_list(d : dico) : string list =;;**)
+let rec mot s = parser
+  | [< ''a'..'z' as c ; m = mot (s^(String.make 1 c)) >] -> m 
+  | [< ''\n' >] -> s;;
+
+let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n";;
+mot "" str;;
+
+let rec of_stream = parser
+  | [< m = mot "" ; em = of_stream >] -> add m em
+  | [< >] -> dico_vide ;;
+
+of_stream str ;;
+
+(**let rec to_list(d : dico) : string list =
+  match d with
+  | Feuille -> []
+  | Noeud(a, b) -> Array.map (fun x -> ) a;; 
+
+to_list dico_vide ;;**)
