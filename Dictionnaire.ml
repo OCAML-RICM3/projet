@@ -1,6 +1,9 @@
 #load "dynlink.cma"
 #load "camlp4o.cma"
 
+module Dictionnaire =
+struct
+
 type dico = Noeud of dico array * bool | Feuille
 
 let dico_vide = Noeud((Array.make 26 Feuille), false)
@@ -62,9 +65,31 @@ let rec of_stream = parser
 
 of_stream str ;;
 
-(**let rec to_list(d : dico) : string list =
+let nbToLetter(x : int) : string = 
+  let c = char_of_int (int_of_char 'a' + x) in String.make 1 c ;;
+  
+nbToLetter 0 ;;
+nbToLetter 25 ;;
+
+let rec to_list(d : dico) : string list = []
+  (**match d with
+  | Feuille -> []
+  | Noeud(a, b) -> 
+    let l = Array.length x in
+    let x = for i=1 to l-1 do
+	to_list a.(i)
+      done; in;; 
+
+let rec to_listSub(d : dico)(s : string) : string list =
   match d with
   | Feuille -> []
-  | Noeud(a, b) -> Array.map (fun x -> ) a;; 
+  | Noeud(a, b) ->
+    let l = Array.length x in
+    let x = for i=1 to l-1 do
+	to_list a.(i) 
+      done; in;;**)
 
+(**
 to_list dico_vide ;;**)
+
+end;;

@@ -1,4 +1,4 @@
-module type Dictionnaire =
+module Dictionnaire :
   sig
     type dico = Noeud of dico array * bool | Feuille
     val dico_vide : dico
