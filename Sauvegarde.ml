@@ -8,15 +8,14 @@ type token = LPar | RPar | TGen of string;;
 #use "regle.mli" ;;
 #use "Lettres.ml" ;;
 
-module Sauvegarde = 
-	functor (R : REGLE) ->
+module Sauvegarde = functor (R : REGLE) ->
 struct
 
   type t = R.t
   type combi = R.combi
   type main = R.main
   type etat = R.etat
-  type joeuru = Player of (string * int * bool * main)
+  type joueur = Player of (string * int * bool * main)
 
   let rec mange_Sp = parser
 		| [< '' '; s >] -> mange_Sp s
@@ -28,55 +27,70 @@ struct
   		| [< ''0'..'9' as c ; m = horner (10 * n + digit c) >] -> m
   		| [< >] -> n;;
 
-  let rec analex_TGen l = parser
-		| [< ''a'..'z' | 'A'..'Z' | '0'..'9' | '*' as c ; m = analex_TGen (l^(String.make 1 c)) >] -> m
-		| [< >] -> l;;
+  let rec analex_TGen = parser
+		| [< ''a'..'z' | 'A'..'Z' | '0'..'9' | '*' as c ; s >] -> (String.make 1 c)^(analex_TGen s)
+		| [< >] -> "";;
 
   let rec analex = parser
-		| [< '' ' ; s >] -> [< [< >]; analex s >]
-		| [< ''\n'; s >] -> [< [< >]; analex s >]
-		| [< ''\t'; s >] -> [< [< >]; analex s >]
-		| [< ''\r'; s >] -> [< [< >]; analex s >]
+		| [< '' ' ; s >] -> [< analex s >]
+		| [< ''\n'; s >] -> [< analex s >]
+		| [< ''\t'; s >] -> [< analex s >]
+		| [< ''\r'; s >] -> [< analex s >]
 		| [< ''(' ; s >] -> [< 'LPar; analex s >]
 		| [< '')' ; s >] -> [< 'RPar; analex s >] 
-		| [< str = analex_TGen ""; s >] -> [< 'TGen(str); analex s >]
-		| [< >] -> [< >];;
+		| [< str = analex_TGen; s >] -> [< 'TGen(str); analex s >] ;;
 
 
-  let rec ident l = parser
-		| [< ''a'..'z'|'A'..'Z' as c ; m = ident (l^String.make 1 c) >] -> m
-		| [< >] -> l;;
+  let rec ident = parser
+		| [< ''a'..'z'|'A'..'Z' as c ; s >] -> (String.make 1 c)^(ident s)
+		| [< >] -> "";;
 
-	(**let s = Stream.of_string "Flo";;
-	ident (String.make 0 'a') s;;**)
-  let s = Stream.of_string "facile" ;;
-analex_TGen "" s ;;
-analex s;;
+	let s = Stream.of_string "Flo";;
+	ident s;;
+ (** let s = Stream.of_string "(F A C I L E)" ;;**)
+(**analex_TGen "" s ;;
+analex s;;**)
+
+  (******************************************************************************)
+  (** Fonctions utilisées pour créer une liste de token lisible par lit_valeur **)
+  (******************************************************************************)
 
   let rec tl = parser
-		| [< 'TGen(t); s >] -> (TGen(t)::(tl s))
+		| [< 'TGen(tok); s >] -> (TGen(tok)::(tl s))
 		| [< >] -> [];;
-
-  let x = analex s ;;
-tl x ;;
-
-tl s ;;
-
   let c = parser
-		| [< ''('; ()=mange_Sp; t = tl; ()=mange_Sp; '')' >] -> tl;;
+		| [< 'LPar; tokList = tl; 'RPar >] -> LPar :: tokList @ [RPar];;
+
+  let tokenToTuile = parser
+		| [< lTuile = c; _ >] -> R.lit_valeur lTuile
+		| [< 'TGen(tok); _ >] -> R.lit_valeur (TGen(tok)::[]) ;;
 
   let rec cl = parser
-		| [< m = c; p = cl >] -> (m :: p);;
+		| [< m = tokenToTuile; p = cl >] -> (m :: p)
+		| [< >] -> [] ;;
+
+  let tokenToCombi = parser
+		| [< 'LPar; combi = cl; 'RPar; _ >] -> combi ;;
+  
+(**  let 
+c x;;
+  let x = analex s ;;
+tl x ;;
+tl s ;; **)
 
   let b = parser
 		| [< ''t'; ''r'; ''u'; ''e' >] -> true
 		| [< ''f'; ''a'; ''l'; ''s'; ''e' >] -> false ;;
 
   let j = parser
-		| [< ''('; ()=mange_Sp; name = ident ""; ()=mange_Sp; score = horner 0; ()=mange_Sp; pose = b; main = c >] -> Player(name, score, pose, main)
+		| [< ''('; ()=mange_Sp; name = ident; ()=mange_Sp; score = horner 0; ()=mange_Sp; pose = b; ()=mange_Sp; main = tokenToCombi; ()=mange_Sp; '')' >] -> Player(name, score, pose, main)
 
   let jl = parser
 		| [< m = j; p = jl >] -> (m :: p)
+		| [< >] -> [] ;;
+  
+  let s = parser
+		| [< ''(';()=mange_Sp;''j';''o';''u';''e';''u';''r';''s';()=mange_Sp; >] -> 
 
 
 

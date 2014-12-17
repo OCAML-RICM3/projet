@@ -1,4 +1,4 @@
-type token = LPar | RPar | TGen of string;;
+#use "Dictionnaire.ml"
 
 module Lettres : REGLES =
 struct
