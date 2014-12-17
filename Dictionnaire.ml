@@ -59,14 +59,14 @@ struct
     | [< ''a'..'z' as c ; m = mot (s^(String.make 1 c)) >] -> m 
     | [< ''\n' >] -> s;;
 
-  (* let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n";; *)
-  (* mot "" str;; *)
+(**  let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n";;**)
+(**  mot "" str;; **)
 
   let rec of_stream = parser
     | [< m = mot "" ; em = of_stream >] -> add m em
     | [< >] -> dico_vide ;;
 
-(*   of_stream str ;; *)
+(**   of_stream str ;; **)
 
   (** Transforme un nombre en la lettre associé, selon la position dans l'alphabet
       de ce fait, 0 -> 'a' et 25 -> 'z' **)
@@ -78,18 +78,18 @@ struct
 
   let to_list (d : dico) : string list = 
     let rec to_listSub (d1 : dico)(s : string) =
-      match d with
+      match d1 with
       | Feuille -> []
-      | Noeud(a, b) -> let list = ref [] in
-		       for i=0 to 25 do
-			 list := (!list)@(to_listSub a.(i) (s^(nbToLetter i)));
+      | Noeud(a, b) -> let listRef = ref [] in
+		       for i=0 to 25 do 
+			 listRef := (!listRef)@(to_listSub a.(i) (s^(nbToLetter i)));
 		       done;
-		       if b then 
-			 s :: (!list)
+		       if b then
+			 s :: (!listRef)
 		       else 
-			 !list
-    in to_listSub d "";;
-    
-(**  to_list dico_vide;; **)
+			 !listRef
+    in to_listSub d "" ;;
+
+(**  to_list dico_vide ;; **)
 
 end;;
