@@ -1,3 +1,10 @@
+#load "dynlink.cma"
+#load "camlp4o.cma"
+
+#use "Dictionnaire.ml"
+#use "regle.mli"
+#use "MultiEnsemble.ml"
+
 open Dictionnaire
 open MultiEnsemble
 
@@ -110,7 +117,8 @@ struct
 
   (*
     Type    :   main -> combi list -> main -> bool
-    Rôle    :   Test si le premier coup est valide, c'est à dire que la liste de combinaisons est valide,
+    Rôle    :   Test si le premier coup est valide, c'est à dire que la liste de combin
+aisons est valide,
                   et que l'union de la main finale avec la liste de combinaisons est égale à la main de départ
     Entrées :   la main de départ, une liste de combinaisons et la main finale
     Sorties :   un booléen, attestant de la validité ou non du premier coup
@@ -120,16 +128,31 @@ struct
       false
     else
       let mainInit = creationMain n p in
-      MultiEnsemble.eg m mainInit && listValide p ;;	
+      MultiEnsemble.eg m mainInit && listValide p ;;
+
+  let rec removeWord (w : combi)(p : combi list) : combi list = 
+    match p with
+    | [] -> []
+    | t::q -> if w = t then q else t::(removeWord w q) ;;
+
+  let rec removeList (l : combi list)(p : combi list) : combi list =
+    match p with
+    | [] -> l
+    | t::q -> removeList (removeWord t l) q ;;
+
+  let 
 
 
-      (** TODO **)
-
- (** let points (c : combi list (* jeu en cours *))(m : main (* main du joueur *))
+  let points (c : combi list (* jeu en cours *))(m : main (* main du joueur *))
 	(n : combi list (* nouveau jeu *))
-	(nm : main (* nouvelle main du joueur *)) : int =**)
-    
-  
+	(nm : main (* nouvelle main du joueur *)) : int =
+    let score = ref 0 in
+    if nm = [] then
+      score := 2*(MultiEnsemble.nbElem m)
+    else
+      score := MultiEnsemble.nbDifference m nm;
+      score := !score + nbCombi (removeList c n);
+    !score ;;
 
   let points_finaux (m : main) : int = 0 ;;
 
@@ -160,7 +183,7 @@ struct
   *)
   let ecrit_valeur (t : t) : string = String.make 1 t ;;
 
-  let fin_pioche_vide = true
+  let fin_pioche_vide = true ;;
 
 end;;
 
@@ -168,6 +191,14 @@ end;;
   (*
     let x = [['A';'B'; 'C'; 'D'; 'E'; 'F']; ['T'; 'E'; 'S'; 'T']; ['A'; 'H'; 'X']] ;;
     nbCombi x;;
+
+    let jeu = [['A'; 'R'; 'B'; 'R'; 'E']; ['T'; 'E'; 'S'; 'T']] ;;
+    let mainInit = [('A', 1); ('C', 1); ('L', 1); ('M', 1); ('O', 1); ('S', 1); ('T', 3)] ;;
+    let nouveauJeu = [['A'; 'R'; 'B'; 'R'; 'E']; ['T'; 'E'; 'S'; 'T'; 'S']; ['O'; 'C'; 'A'; 'M'; 'L']] ;;
+    let mainFinale = [('T', 3)] ;;
+    points jeu mainInit nouveauJeu mainFinale ;;
+    removeWord ['A'; 'H'; 'X'] x ;;
+    removeList x [['A'; 'H'; 'X']; ['T'; 'E'; 'S'; 'T']] ;;
     addWord paquet ['A'; 'A'; 'A'; 'A'] ;;
     creationMain [] x;; 
     listValide x ;;
@@ -176,3 +207,4 @@ end;;
     let tok = [TGen "A"];;
     lit_valeur tok ;;
   *)
+  
