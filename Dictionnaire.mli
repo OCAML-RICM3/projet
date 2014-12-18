@@ -1,7 +1,7 @@
 module Dictionnaire :
   sig
     type dico = Noeud of dico array * bool | Feuille
-    val dico_vide : dico
+    val dico_vide : unit -> dico
     val member : string -> dico -> bool
     val add : string -> dico -> dico
     val remove : string -> dico -> dico

@@ -1,3 +1,7 @@
+open MultiEnsemble
+
+type token = LPar | RPar | TGen of string;;
+
 module type REGLE =
 sig
   type t
