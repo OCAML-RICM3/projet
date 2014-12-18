@@ -8,9 +8,9 @@ all:
 	ocamlc -c Dictionnaire.mli
 	ocamlc -c -pp camlp4o Dictionnaire.ml
 	
-#	ocamlc -c -pp camlp4o LoadSaveRami.ml
+	ocamlc -c -pp camlp4o Lettres.ml
 	
-	ocamlc -c Lettres.ml
+	ocamlc -c -pp camlp4o LoadSaveRami.ml
 	
 	
 

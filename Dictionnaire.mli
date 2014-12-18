@@ -5,6 +5,7 @@ module Dictionnaire :
     val member : string -> dico -> bool
     val add : string -> dico -> dico
     val remove : string -> dico -> dico
+    val mot : char Stream.t -> string
     val of_stream : char Stream.t -> dico
     val to_list : dico -> string list
   end

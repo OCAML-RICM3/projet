@@ -1,16 +1,17 @@
-#load "dynlink.cma"
+(*#load "dynlink.cma"
 #load "camlp4o.cma"
 
 #use "Dictionnaire.ml"
 #use "regle.mli"
-#use "MultiEnsemble.ml"
+#use "MultiEnsemble.ml"*)
 
 open Dictionnaire
 open MultiEnsemble
+open Regle
 
-type token = LPar | RPar | TGen of string;;
+(*type token = LPar | RPar | TGen of string;;*)
 
-module Lettres : REGLE =
+module Lettres =
 struct
 
   type t = char
@@ -117,8 +118,7 @@ struct
 
   (*
     Type    :   main -> combi list -> main -> bool
-    Rôle    :   Test si le premier coup est valide, c'est à dire que la liste de combin
-aisons est valide,
+    Rôle    :   Test si le premier coup est valide, c'est à dire que la liste de combinaisons est valide,
                   et que l'union de la main finale avec la liste de combinaisons est égale à la main de départ
     Entrées :   la main de départ, une liste de combinaisons et la main finale
     Sorties :   un booléen, attestant de la validité ou non du premier coup
@@ -130,19 +130,36 @@ aisons est valide,
       let mainInit = creationMain n p in
       MultiEnsemble.eg m mainInit && listValide p ;;
 
+  (*
+    Type    :   combi -> combi list -> combi list
+    Rôle    :   Retire une combinaison d'une liste de combinaisons
+    Entrées :   la combinaison à supprimer, et la liste de combinaisons dans laquelle elle doit être supprimée
+    Sorties :   une liste de combinaisons, résultat de la suppression
+  *)
   let rec removeWord (w : combi)(p : combi list) : combi list = 
     match p with
     | [] -> []
     | t::q -> if w = t then q else t::(removeWord w q) ;;
 
+  (*
+    Type    :   combi list -> combi list -> combi list
+    Rôle    :   Retire une liste de combinaisons d'une liste de combinaisons
+    Entrées :   la liste de combinaisons à supprimer, et la liste de combinaisons dans laquelle elle doit être supprimée
+    Sorties :   une liste de combinaisons, résultat de la suppression
+  *)
   let rec removeList (l : combi list)(p : combi list) : combi list =
     match p with
     | [] -> l
     | t::q -> removeList (removeWord t l) q ;;
 
-  let 
-
-
+  (*
+    Type    :   combi list -> main -> combi list -> main
+    Rôle    :   Calcul le score associé à un jeu en cours, la main d'un joueur, un nouveau jeu et la nouvelle main
+                  du joueur.
+    Entrées :   une liste de combinaisons (jeu en cours), une main (main actuelle du joueur), une liste de combinaisons
+                  (nouveau jeu) et une main (nouvelle main du joueur).
+    Sorties :   le score associé au tour de jeu
+  *)
   let points (c : combi list (* jeu en cours *))(m : main (* main du joueur *))
 	(n : combi list (* nouveau jeu *))
 	(nm : main (* nouvelle main du joueur *)) : int =

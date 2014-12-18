@@ -1,7 +1,5 @@
-(**
-#load "dynlink.cma"
-#load "camlp4o.cma"
-**)
+(*#load "dynlink.cma"*)
+(*#load "camlp4o.cma"*)
 
 module Dictionnaire =
 struct
@@ -72,7 +70,7 @@ struct
     Entrées :   un stream de char à parser
     Sorties :   une chaine, résultat du parsing
   *)
-  let rec mot= parser
+  let rec mot = parser
     | [< ''a'..'z' as c; s >] -> (String.make 1 c) ^ (mot s) 
     | [< ''\n' >] -> "";;
 
