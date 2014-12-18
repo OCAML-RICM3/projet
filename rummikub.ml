@@ -63,35 +63,43 @@ struct
         |Joker::Joker::Tuile(n,_)::l ->  (2*n-4+((nb_element l)+2))*(nb_element combin)/2
         else failwith "combinaison non valide";; 
 		 
-let premier_coup_valide mainInit listeCombi mainFinale = 
+  let rec premier_coup_valide_aux nb listeCombi = match listeCombi with
+  |[]-> nb>= 30
+  |t::q -> (premier_coup_valide_aux (nb+ points_combi t) q);;
 
 				
-			
+  let premier_coup_valide mainInit listeCombi mainFinale = premier_coup_valide_aux 0 listeCombi;;			
 		
 	
 
+  let points listeCombiActuel mainInitiale listeCombiFinale mainFinale = 0;;
 
 
+  let rec points_finaux_aux point main:int= match main with
+    |[]-> point
+    |(Joker,occ)::l -> points_finaux_aux (point + occ*30) l
+    |(Tuile(nb,_),occ)::l -> points_finaux_aux (point + nb*occ) l;;
 
-
-	let points_finaux main = ;;
-		
+  
+  let main_initiale = 14;;
 	
-	let lit_valeur listetoken = 
-		match listetoken with
-			| [TGen((tuile:string))] -> Joker
-			| [LPar;TGen(coul);TGen(ent);RPar] -> (let numero = int_of_string ent in
-							       if coul.[0] = 'b' then
-								Tuile(numero,Bleu)
-							       else if coul.[0] = 'r' then
-								Tuile(numero,Rouge)
-					   		       else if coul.[0] = 'j' then
-								Tuile(numero,Jaune)
-					  		       else if coul.[0] = 'n' then
-								Tuile(numero,Noir)					
-							       else
-								raise ProblemeParser)
-			| _ -> raise ProblemeParser
+  let main_min = 0;;
+
+	
+  let lit_valeur listetoken =  match listetoken with
+    |[TGen((tuile:string))] -> Joker
+    |[LPar;TGen(coul);TGen(ent);RPar] -> (let numero = int_of_string ent in
+					      	       if coul.[0] = 'b' then
+					       		Tuile(numero,Bleu)
+					       	       else if coul.[0] = 'r' then
+					       		Tuile(numero,Rouge)
+					       	       else if coul.[0] = 'j' then
+					       		Tuile(numero,Jaune)
+					       	       else if coul.[0] = 'n' then
+					       		Tuile(numero,Noir)					
+					       	       else
+				       			raise ProblemeParser)
+  | _ -> raise ProblemeParser
 
 
 
@@ -111,11 +119,9 @@ let premier_coup_valide mainInit listeCombi mainFinale =
 					
 
 		
-	let main_initiale = 14
 	
-	let main_min = 0
 
-	let fin_pioche_vide = false
+	let fin_pioche_vide = true;;
 	
   
 end;;
