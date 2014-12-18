@@ -60,11 +60,25 @@ struct
     Entrées :   l'élément à supprimer ainsi que sa multiplicité, dans le multiensemble donné a
     Sorties :   un multiensemble, résultat de la suppression
   *)
-  let rec remove (x : 'a * int)(a : 'a mset) =
+  let rec remove (x : 'a * int)(a : 'a mset) : 'a mset =
     match a with
     | [] -> []
     | t::q -> if x = t then q
       else t::(remove x q)
+
+  (*
+    Type    :   'a * int -> 'a mset -> 'a mset
+    Rôle    :   Cette fonction retire un certain nombre d'occurrence d'un élément donné d'un multiensemble 
+                  si celui-ci existe dans le multiensemble.
+    Entrées :   l'élément à supprimer ainsi que sa multiplicité, dans le multiensemble donné a
+    Sorties :   un multiensemble, résultat de la suppression
+  *)
+  let rec removeOcc ((v, nb) : 'a * int)(a : 'a mset) : 'a mset =
+    match a with
+    | [] -> []
+    | (v1, nb1)::q -> if v1 = v then
+	if nb1 <=  nb then q else (v1, (nb1-nb))::q
+      else (v1, nb1)::(removeOcc (v, nb) q) ;;
 
   (*
     Type    :   'a mset -> 'a mset -> bool
@@ -77,12 +91,49 @@ struct
     | [] -> (b = vide)
     | t::q -> (appart_couple t b) && (eg q (remove t b))
 
+  (*
+    Type    :   'a mset -> 'a mset -> 'a mset
+    Rôle    :   Cette fonction calcul la différence de deux multiensembles
+    Entrées :   deux multiensemble a et b
+    Sorties :   un multiensemble, résultat de la différence de a et b (a\b)
+  *)
+  let rec difference (a : 'a mset)(b : 'a mset) : 'a mset =
+    match b with
+    | [] -> a
+    | t::q -> difference (removeOcc t a) q ;;
+
+  (*
+    Type    :   'a mset -> int
+    Rôle    :   Cette fonction calcul le nombre d'éléments présent dans un mutliensemble
+                  en tenant compte de leur multiplicité.
+    Entrées :   un mutliensemble
+    Sorties :   un entier
+  *)
+  let rec nbElem (a : 'a mset) : int =
+    match a with
+    | [] -> 0
+    | (v, nb)::q -> nb + nbElem q ;;
+
+  (*
+    Type    :   'a mset -> 'a mset -> int
+    Rôle    :   Cette fonction calcul le nombre d'éléments différents de deux multiensembles
+    Entrées :   deux multiensemble a et b
+    Sorties :   un entier
+  *)
+  let nbDifference (a : 'a mset)(b : 'a mset) : int =
+    nbElem (difference a b) ;;
+
 end;;
 
   (** TESTS **)
-  (* 
+  (*
     let l1 = [(1,3); (2,4)] ;;
-    let l2 = [(1,3); (2,4); (3,5); (4,8)] ;;
+    removeOcc (1,2) l1 ;;
+    nbElem l1 ;;
+    let l2 = [(1,5); (2,4); (3,5); (4,8)] ;;
+    difference l2 l1 ;;
+    nbElem l2 ;;
     eg l1 l2 ;;
-    union l1 l2;; 
+    union l1 l2;;
+    nbDifference l2 l1 ;;
   *)

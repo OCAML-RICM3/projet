@@ -10,5 +10,9 @@ sig
   val add : 'a * int -> 'a mset -> 'a mset
   val appart_couple : 'a * int -> 'a mset -> bool
   val remove : 'a * int -> 'a mset -> 'a mset
+  val removeOcc : 'a * int -> 'a mset -> 'a mset
+  val difference : 'a mset -> 'a mset -> 'a mset
+  val nbElem : 'a mset -> int
+  val nbDifference : 'a mset -> 'a mset -> int
 
 end;;
