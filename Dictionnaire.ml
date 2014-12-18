@@ -107,7 +107,7 @@ struct
       | Feuille -> []
       | Noeud(a, b) -> let listRef = ref [] in
 		       for i=0 to 25 do 
-			 listRef := (!listRef)@(to_listSub a.(i) (s^(nbToLetter i)));
+			 listRef := List.rev_append (!listRef) (to_listSub a.(i) (s^(nbToLetter i)));
 		       done;
 		       if b then
 			 s :: (!listRef)
@@ -158,7 +158,7 @@ let rec affiche (l : string list) =
   | t::q -> t^"\n"^(affiche q);;
 
 let dico =
-  let flux = open_in "test.txt" in
+  let flux = open_in "dico_fr.txt" in
   let mondico = ref (dico_vide()) in
   try
     begin
