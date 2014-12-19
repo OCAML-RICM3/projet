@@ -176,6 +176,9 @@ struct
   let chargement (s : char Stream.t) : R.etat =
     ParserLoadSave.getEtat s;;
 
+  (*
+    Lit un coup donné par l'utilisateur 
+  *)
   let lit_coup (name : string)(main : R.main)(game : R.combi list)(pose : bool) =
     print_endline ("\n ##### " ^ name ^ " #####\n Déjà posé : " ^ string_of_bool pose); 
     print_endline (" Main : " ^ mainToString main ^ "\n");
