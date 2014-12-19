@@ -22,4 +22,4 @@ all:
 	ocamlc -o ramideslettres MultiEnsemble.cmo Dictionnaire.cmo Lettres.cmo LoadSaveRami.cmo Jeu.cmo mainLettres.cmo
 	
 clean:
-	rm -rf *.cmi *.cmo *~
+	rm -rf *.cmi *.cmo *~ ramideslettres

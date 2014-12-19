@@ -37,9 +37,9 @@ Ainsi on peut charger une partie depuis un fichier, et sauvegarder une partie en
 L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. Celle-ci sont fonctionnelles, et peuvent être utilisées dans d'autres modules externes.
 Le module peut être utilisé pour jouer.
 
-### Module Rummikub pour l'implémentation du "Rami des Chiffres"
+### Module Rummikub pour l'implémentation du "Rami des Chiffres"
 
-
+L'ensemble des fonction dans Rummikub fonctionne et sont fournie avec un jeu de test.
 
 ### Module Jeu
 
@@ -55,12 +55,12 @@ Pour lancer le Rami des Lettres, utiliser la commande `./ramideslettres`
 Dans notre cas, nous avons décidé de charger un fichier depuis le dossier pour lancer la partie.
 
 On pourra vérifier du bon fonctionnement du programme avec les combinaisons suivantes :
-	- (L F T E R A)(C O L L I E R) pour Albert
-	- (V N M M E I)(C O L L I E R)(M A N G E * A) pour Damien
+
+* (L F T E R A)(C O L L I E R) pour Albert
+* (V N M M E I)(C O L L I E R)(M A N G E * A) pour Damien
 
 Remarques :
 -----------
 
 Dans notre code, nous n'avons incorporé que l'utilisation du Rami des Lettres. Ceci est du à une erreur dans Rummikub, cependant en appliquant le foncteur Jeu sur une version valide de Rummikub, on pourrait y jouer.
-
 
