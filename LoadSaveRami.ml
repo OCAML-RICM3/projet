@@ -52,9 +52,9 @@ struct
 		Sorties :   l'entier associé
   *)
   let rec horner(n : int)(s : string) : int =
-	if String.length s > 0 then
-	  horner ( 10*n + digit s.[0]) (String.sub s 1 ((String.length s)-1))
-	else n ;;
+		if String.length s > 0 then
+	  	horner ( 10*n + digit s.[0]) (String.sub s 1 ((String.length s)-1))
+		else n ;;
 
 	(*
 		Type    :   char Stream.t -> string
@@ -176,8 +176,16 @@ struct
   let j = parser
 		| [< 'LPar; name = ident; score = hornerTok; pose = b; main = tokenToCombi; 'RPar >] -> Player(name, score, pose, fromListToMain(main))
 	
+
+	(*
+		Type    :   token Stream.t -> (combi * combi list)
+		Rôle    :   Parse une entrée de l'utilisateur quand celui-ci veut poser des tuiles
+		Entrées :   un stream de caractères
+		Sorties :   un couple formé à partir de la nouvelle main du joueur, et de l'ensemble des combinaisons
+									présentes sur la table
+  *)
 	let readMainCombiList = parser
-		| [< main = tokenToCombi; list = tokenToCombiList >] -> (fromListToMain(main), list)
+		| [< main = tokenToCombi; l = tokenToCombiList >] -> (fromListToMain(main), l)
 
 	(*
 		Type    :   token Stream.t -> joueur list
@@ -245,9 +253,9 @@ struct
 	| [] -> (Array.make 0 "", Array.make 0 0, Array.make 0 true, Array.make 0 [])
 	| Player(n, s, p, m)::q -> let (n1, s1, p1, m1) = getArray q in
 	   (Array.append (Array.make 1 n) n1, 
-	Array.append (Array.make 1 s) s1, 
-	Array.append (Array.make 1 p) p1, 
-	Array.append (Array.make 1 m) m1) ;;
+	   	Array.append (Array.make 1 s) s1, 
+	   	Array.append (Array.make 1 p) p1, 
+	   	Array.append (Array.make 1 m) m1) ;;
 
 	(*
 		Type    :   token Stream.t -> etat
@@ -273,14 +281,14 @@ struct
 		Sorties :   l'état représentatif du stream de token passé en paramètre
   *)
   let getEtat stream = 
-	s (analex stream) ;;
+		s (analex stream) ;;
 
 end;;
 
 	  
 	(** TESTS **)
 
-(**	
+	(*
 		let s = Stream.of_string "Flo" ;;
 		ident (analex s) ;;
 		let b1 = Stream.of_string "false" ;;
@@ -291,32 +299,33 @@ end;;
 		analex_TGen "" s ;;
 		analex s ;;
 		c x ;;
-	let x = analex s ;;
+		let x = analex s ;;
 		tl x ;;
 		tl s ;;
 
 
-  let tokStream = Stream.of_string "S P O I N E L *";;
-let tokStream2 = Stream.of_string "(S P O I N E L *)";;
-tl (analex tokStream);;
-c (analex tokStream);;
-tokenToTuile (analex tokStream) ;;
-fromListToMain(tokenToCombi (analex tokStream2)) ;;
+		let tokStream = Stream.of_string "S P O I N E L *";;
+		let tokStream2 = Stream.of_string "(S P O I N E L *)";;
+		tl (analex tokStream);;
+		c (analex tokStream);;
+		tokenToTuile (analex tokStream) ;;
+		fromListToMain(tokenToCombi (analex tokStream2)) ;;
 
-let tokStream3 = Stream.of_string "(jeu (F A C I L E)(E X A M E N)(C A * T O N)(E L E V E)(B R I L L A N T))";;
-jeu (analex tokStream3) ;;
+		let tokStream3 = Stream.of_string "(jeu (F A C I L E)(E X A M E N)(C A * T O N)(E L E V E)(B R I L L A N T))";;
+		jeu (analex tokStream3) ;;
 
-let tokStream4 = Stream.of_string "(pioche C S N O H I N U A E L T M X)";;
-pioche (analex tokStream4) ;;
+		let tokStream4 = Stream.of_string "(pioche C S N O H I N U A E L T M X)";;
+		pioche (analex tokStream4) ;;
 
-let tokStream5 = Stream.of_string "(tour 3)" ;;
-tour (analex tokStream5) ;;
+		let tokStream5 = Stream.of_string "(tour 3)" ;;
+		tour (analex tokStream5) ;;
 
-  
-let playersStream = Stream.of_string "(joueurs (Pascal 17 true (S P O I N E L *)) (Laurent 42 true (N S A V U L G I O)) (Marion 0 false (E E I N M Z S O O V C N L)))" ;;
 
-  getArray(joueurs (analex playersStream)) ;;
+		let playersStream = Stream.of_string "(joueurs (Pascal 17 true (S P O I N E L *)) (Laurent 42 true (N S A V U L G I O)) (Marion 0 false (E E I N M Z S O O V C N L)))" ;;
 
-let game = Stream.of_string "(joueurs (Pascal 17 true (S P O I N E L *)) (Laurent 42 true (N S A V U L G I O)) (Marion 0 false (E E I N M Z S O O V C N L)))(jeu (F A C I L E)(E X A M E N)(C A * T O N)(E L E V E)(B R I L L A N T))(pioche C S N O H I N U A E L T M X)(tour 3)" ;;
-getEtat game;;	**)
+		getArray(joueurs (analex playersStream)) ;;
+
+		let game = Stream.of_string "(joueurs (Pascal 17 true (S P O I N E L *)) (Laurent 42 true (N S A V U L G I O)) (Marion 0 false (E E I N M Z S O O V C N L)))(jeu (F A C I L E)(E X A M E N)(C A * T O N)(E L E V E)(B R I L L A N T))(pioche C S N O H I N U A E L T M X)(tour 3)" ;;
+		getEtat game;;	
+	*)
 

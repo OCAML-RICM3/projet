@@ -9,8 +9,6 @@ open Dictionnaire
 open MultiEnsemble
 open Regle
 
-(*type token = LPar | RPar | TGen of string;;*)
-
 module Lettres =
 struct
 
@@ -45,14 +43,14 @@ struct
   *)
   let valide s =
     ((String.length s) <> 0) &&
-      begin
-	let ret = ref true in
-	for i = 0 to (String.length s) - 1 do
-	  let c = Char.code s.[i] in
-	  ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
-	done;
-	!ret
-      end
+    begin
+      let ret = ref true in
+      for i = 0 to (String.length s) - 1 do
+        let c = Char.code s.[i] in
+        ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
+      done;
+      !ret
+    end
 
   (*
     Type    :   combi -> bool
@@ -61,9 +59,9 @@ struct
     Sorties :   un booléen, résultat de l'analyse
   *)
   let combi_valide (c : combi) : bool = 
-   let s = charListToString c in 
-   (Dictionnaire.member s (Dictionnaire.dico))
-   && (String.length s >= 3) && (valide s) ;;
+    let s = charListToString c in 
+    (Dictionnaire.member s (Dictionnaire.dico))
+    && (String.length s >= 3) && (valide s) ;;
 
   (*
     Type    :   combi list -> int
@@ -76,10 +74,10 @@ struct
       match c with
       | [] -> l
       | t::q -> let long = List.length t in
-	  if long > l then
-	    nbCombiSub q long
-		else nbCombiSub q l
-   in nbCombiSub c 0;;
+        if long > l then
+          nbCombiSub q long
+        else nbCombiSub q l
+    in nbCombiSub c 0;;
 
   (*
     Type    :   main -> combi -> main
@@ -153,7 +151,7 @@ struct
     | t::q -> removeList (removeWord t l) q ;;
 
   (*
-    Type    :   combi list -> main -> combi list -> main
+    Type    :   combi list -> main -> combi list -> main -> int
     Rôle    :   Calcul le score associé à un jeu en cours, la main d'un joueur, un nouveau jeu et la nouvelle main
                   du joueur.
     Entrées :   une liste de combinaisons (jeu en cours), une main (main actuelle du joueur), une liste de combinaisons
@@ -171,9 +169,17 @@ struct
       score := !score + nbCombi (removeList c n);
     !score ;;
 
+  (*
+    Type    :   main -> int
+    Rôle    :   Calcul les points à l'état final par rapport à une main
+    Entrées :   une main
+    Sorties :   les points finaux associé à l'état final
+    Rem     :   Dans le cas du Rami des Lettres, les points finaux sont de 0
+  *)
   let points_finaux (m : main) : int = 0 ;;
 
   let main_min = 7;;
+
   let main_initiale = 14;;
 
   (*
@@ -188,7 +194,7 @@ struct
   let lit_valeur (t : token list) : t = 
     match t with
     | [TGen(tok)] -> if String.length tok > 1 then
-	failwith "Erreur de tuile pour le Rami des Lettres"
+        failwith "Erreur de tuile pour le Rami des Lettres"
       else tok.[0]
     | _ -> failwith "Erreur de tuile pour le Rami des Lettres" ;;
 

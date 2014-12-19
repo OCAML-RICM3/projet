@@ -29,9 +29,9 @@ struct
     | Feuille -> false
     | Noeud(a, b) -> if String.length s = 0 then b
       else if s.[0] = '*' then
-	Array.fold_right (fun x y -> (member (String.sub s 1 ((String.length s)-1)) x) || y) a false
+        Array.fold_right (fun x y -> (member (String.sub s 1 ((String.length s)-1)) x) || y) a false
       else
-	member (String.sub s 1 ((String.length s)-1)) a.(mapLettre s.[0]) ;;
+        member (String.sub s 1 ((String.length s)-1)) a.(mapLettre s.[0]) ;;
 
   (*
     Type    :   string -> dico -> dico
@@ -44,9 +44,9 @@ struct
     | Feuille -> add s (dico_vide())
     | Noeud(a, b) -> if String.length s = 0 then Noeud(a, true)
       else 
-	let pl = mapLettre s.[0] in
-	  a.(pl) <- (add (String.sub s 1 ((String.length s)-1)) a.(pl));
-	  Noeud(a, b) ;;
+        let pl = mapLettre s.[0] in
+        a.(pl) <- (add (String.sub s 1 ((String.length s)-1)) a.(pl));
+        Noeud(a, b) ;;
 
   (*
     Type    :   string -> dico -> dico
@@ -58,10 +58,10 @@ struct
     match d with
     | Feuille -> failwith "Erreur : feuille atteinte sans reconnaissance du mot."
     | Noeud(a, b) -> if String.length s = 0 then Noeud(a, false)
-      else 
-	let pl = mapLettre s.[0] in
-	Array.set a pl (remove (String.sub s 1 ((String.length s)-1)) a.(pl));
-	Noeud(a, b) ;;
+      else
+        let pl = mapLettre s.[0] in
+        Array.set a pl (remove (String.sub s 1 ((String.length s)-1)) a.(pl));
+        Noeud(a, b) ;;
 
   (*
     Type    :   char Stream.t -> string
@@ -106,77 +106,81 @@ struct
       match d1 with
       | Feuille -> []
       | Noeud(a, b) -> let listRef = ref [] in
-		       for i=0 to 25 do 
-			 listRef := List.rev_append (!listRef) (to_listSub a.(i) (s^(nbToLetter i)));
-		       done;
-		       if b then
-			 s :: (!listRef)
-		       else 
-			 !listRef
+		      for i=0 to 25 do 
+            listRef := List.rev_append (!listRef) (to_listSub a.(i) (s^(nbToLetter i)));
+		      done;
+		      if b then
+            s :: (!listRef)
+		      else 
+            !listRef
     in to_listSub d "" ;;
 
-    (* 
-      Fonctions fournies dans complement.ml
-    *)
-    let valide s =
-  ((String.length s) <> 0) &&
+  (*
+    Type    :   string -> bool
+    Rôle    :   Teste la validité d'une chaine de caractères.
+    Entrées :   la chaine à tester
+    Sorties :   un booléen, résultat du test
+  *)
+  let valide s =
+    ((String.length s) <> 0) &&
     begin
       let ret = ref true in
       for i = 0 to (String.length s) - 1 do
-  let c = Char.code s.[i] in
-  ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
+        let c = Char.code s.[i] in
+        ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
       done;
       !ret
     end;;
 
-    (* Permet de charger un dictionnaire en mettant tous les mots en majuscules *)
-(* Les mots avec accents sont supprimés. *)
-(* La fonction add du dictionnaire doit avoir été déjà implantée. *)
-
-let dico =
-  let flux = open_in "dico_fr.txt" in
-  let mondico = ref (dico_vide()) in
-  try
-    begin
-      while true do
-  let l = String.uppercase (input_line flux) in
-  if (valide l) then
-    mondico := add l (!mondico);
-      done;
-      !mondico
-    end
-  with
-    End_of_file -> !mondico;;
+  (*
+    Type    :   dico
+    Rôle    :   Permet de charger un dictionnaire en mettant tous les mots en majuscules
+                Les mots avec accents sont supprimés.
+  *)
+  let dico =
+    let flux = open_in "dico_fr.txt" in
+    let mondico = ref (dico_vide()) in
+    try
+      begin
+        while true do
+          let l = String.uppercase (input_line flux) in
+          if (valide l) then
+            mondico := add l (!mondico);
+        done;
+        !mondico
+      end
+    with
+      End_of_file -> !mondico;;
 
 end;;
 
 
-(** TESTS **)
+  (** TESTS **)
+  (*
+    let x = "abc" ;;
+    mapLettre x.[2] ;;
+    let dico = add x (dico_vide());;
+    add "aaa" dico ;;
+    to_list dico ;;
 
-(*
-  let x = "abc" ;;
-  mapLettre x.[2] ;;
-  let dico = add x (dico_vide());;
-  add "aaa" dico ;;
-  to_list dico ;;
+    member "***" dico_vide ;;
 
-  member "***" dico_vide ;;
+    remove "" dico_vide ;;
+    remove "abcde" dico_vide ;;
+    dico_vide;;
+    add x dico_vide ;;
+    remove x dico_vide ;;
+    member "" dico_vide;;
+    member x dico_vide ;;
 
-  remove "" dico_vide ;;
-  remove "abcde" dico_vide ;;
-  dico_vide;;
-  add x dico_vide ;;
-  remove x dico_vide ;;
-  member "" dico_vide;;
-  member x dico_vide ;;
+    let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n" ;;
+    mot str;;
 
-  let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n" ;;
-  mot str;;
+    print_endline(affiche(to_list(of_stream str))) ; ;;
 
-  print_endline(affiche(to_list(of_stream str))) ; ;;
+    to_list dico ;;
 
-  to_list dico ;;
-
-  nbToLetter 0 ;; 
-  nbToLetter 25 ;;
-  to_list dico ;; *)
+    nbToLetter 0 ;; 
+    nbToLetter 25 ;;
+    to_list dico ;; 
+  *)

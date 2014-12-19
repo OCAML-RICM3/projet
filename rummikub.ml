@@ -1,8 +1,12 @@
-#use "regle.mli"
-#use "MultiEnsemble.ml"
-type token = LPar | RPar | TGen of string
+(*#use "regle.mli"
+#use "MultiEnsemble.ml"*)
 
-module Rummikub : REGLES =
+(*type token = LPar | RPar | TGen of string*)
+
+open MultiEnsemble
+open Regle
+
+module Rummikub =
 struct
   
   type couleur = Bleu | Rouge | Jaune | Noir
@@ -204,7 +208,7 @@ struct
   
 end;;
 
-
+(*
 let comb1 =[Tuile(6, Bleu); Tuile (6, Rouge); Tuile (6, Jaune);Joker];;
 combi_valide comb1;;
 
@@ -216,3 +220,4 @@ combi_valide comb2;;
 let lcombi = [comb1;comb2];;
 
 premier_coup_valide (a:main) lcombi (b:main);;
+*)

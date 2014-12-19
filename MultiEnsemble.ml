@@ -77,7 +77,7 @@ struct
     match a with
     | [] -> []
     | (v1, nb1)::q -> if v1 = v then
-	if nb1 <=  nb then q else (v1, (nb1-nb))::q
+        if nb1 <=  nb then q else (v1, (nb1-nb))::q
       else (v1, nb1)::(removeOcc (v, nb) q) ;;
 
   (*
@@ -123,14 +123,24 @@ struct
   let nbDifference (a : 'a mset)(b : 'a mset) : int =
     nbElem (difference a b) ;;
 
- (*'a mset -> int -> 'a*)
+  (*
+    Type    :   'a mset -> int -> 'a
+    Rôle    :   Cette fonction récupère le n ième élément d'un multiensemble
+    Entrées :   un mutliensemble, le numéro de l'élément
+    Sorties :   un élément extrait du multiensemble
+  *)
   let rec elemN (a : 'a mset)(n : int) : 'a =
     match a with
     | [] -> failwith "Cet element n'existe pas."
     | (v, nb)::q -> if n = 0 then v 
       else elemN (removeOcc (v,1) ((v, nb)::q)) (n-1) ;;
 
-  (* 'a mset -> 'a*)
+  (*
+    Type    :   'a mset -> 'a
+    Rôle    :   Tire élatoirement un élément d'un mutliensemble
+    Entrées :   un mutliensemble
+    Sorties :   un élément extrait aléatoirement du multiensemble
+  *)
   let rand (a : 'a mset) : 'a =
     elemN a (Random.int (nbElem a)) ;;
 
