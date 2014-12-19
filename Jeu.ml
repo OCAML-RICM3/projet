@@ -80,6 +80,45 @@ struct
     | t::q -> (R.combi_valide t) && combiListValide q ;;
 
   (*
+    Type    :   R.combi -> string
+    Rôle    :   Convertit une combinaison en une chaine de caractères.
+    Entrées :   une combinaison à convertir
+    Sorties :   une chaine de caractère décrivant la combinaison donnée en paramètre
+  *)
+  let rec combiToString (c : R.combi) : string =
+    match c with
+    | [] -> ""
+    | [x] -> R.ecrit_valeur x
+    | t::q -> (R.ecrit_valeur t) ^ " " ^ (combiToString q) ;;
+
+  (*
+    Type    :   R.combi list -> string
+    Rôle    :   Convertit une list de combinaisons en une chaine de caractères.
+    Entrées :   une liste de combinaisons à convertir
+    Sorties :   une chaine de caractère décrivant la liste de combinaisons donnée en paramètre
+  *)
+  let rec combiListToString (l : R.combi list) : string =
+    match l with
+    | [] -> ""
+    | [x] -> "(" ^ (combiToString x)  ^ ")"
+    | t::q -> "(" ^ (combiToString t)  ^ ")\n" ^ (combiListToString q) ;;
+
+  (*
+    Type    :   R.main -> string
+    Rôle    :   Convertit une main en une chaine de caractères.
+    Entrées :   une main à convertir
+    Sorties :   une chaine de caractère décrivant la main donnée en paramètre
+  *)
+  let rec mainToString (m : R.main) : string =
+    match m with
+    | [] -> ""
+    | [(v, 1)] -> R.ecrit_valeur v 
+    | (v, nb)::q -> if nb = 1 then 
+        (R.ecrit_valeur v) ^ " " ^ (mainToString q)
+      else
+        (R.ecrit_valeur v) ^ " " ^ (mainToString ((v, (nb-1))::q));;
+
+  (*
     Type    :   R.combi list -> R.main -> R.combi list -> R.main -> bool -> bool
     Rôle    :   Test si un coup donné par l'utilisateur est valide, est lève différentes exceptions suivant les erreurs
     Entrées :   un ensemble de donnée sur le coup proposé par l'utilisateur
@@ -102,11 +141,9 @@ struct
       	  else
       	    raise (CoupValide "Les lettres posees ne correspondent pas avec celles que vous avez dans votre main initiale.")
       else
-      	if (MultiEnsemble.nbElem main) <> R.main_initiale then
-      	  raise (CoupValide "Le nombre de tuiles presentes dans votre main n'est pas valide.")
-      	else
-          if R.premier_coup_valide main combiPose newMain then true
-          else raise (CoupValide "Le premier coup n'est pas valide.") ;;
+        if R.premier_coup_valide main combiPose newMain then true
+        else
+          raise (CoupValide "Le premier coup n'est pas valide.") ;;
 
   (*
     Type    :   R.main -> R.t * R.main
@@ -161,55 +198,17 @@ struct
     {R.noms = Array.of_list l;R.scores = Array.make (List.length l) 0;R.mains = mains;R.table = [];R.pioche = pioche;R.pose = Array.make (List.length l) false;R.tour = 1} ;;
 
   (*
-    Type    :   R.combi -> string
-    Rôle    :   Convertit une combinaison en une chaine de caractères.
-    Entrées :   une combinaison à convertir
-    Sorties :   une chaine de caractère décrivant la combinaison donnée en paramètre
-  *)
-  let rec combiToString (c : R.combi) : string =
-    match c with
-    | [] -> ""
-    | [x] -> R.ecrit_valeur x
-    | t::q -> (R.ecrit_valeur t) ^ " " ^ (combiToString q) ;;
-
-  (*
-    Type    :   R.combi list -> string
-    Rôle    :   Convertit une list de combinaisons en une chaine de caractères.
-    Entrées :   une liste de combinaisons à convertir
-    Sorties :   une chaine de caractère décrivant la liste de combinaisons donnée en paramètre
-  *)
-  let rec combiListToString (l : R.combi list) : string =
-    match l with
-    | [] -> ""
-    | t::q -> "(" ^ (combiToString t)  ^ ")\n" ^ (combiListToString q) ;;
-
-  (*
-    Type    :   R.main -> string
-    Rôle    :   Convertit une main en une chaine de caractères.
-    Entrées :   une main à convertir
-    Sorties :   une chaine de caractère décrivant la main donnée en paramètre
-  *)
-  let rec mainToString (m : R.main) : string =
-    match m with
-    | [] -> ""
-    | [(v, 1)] -> R.ecrit_valeur v 
-    | (v, nb)::q -> if nb = 1 then 
-        (R.ecrit_valeur v) ^ " " ^ (mainToString q)
-      else
-        (R.ecrit_valeur v) ^ " " ^ (mainToString ((v, (nb-1))::q));;
-
-  (*
     Type    :   R.etat -> string
     Rôle    :   Convertit un état en une chaine de caractères.
     Entrées :   un etat à convertir
     Sorties :   une chaine de caractère décrivant l'état donné en paramètre
   *)
   let sauvegarde (e : R.etat) : string =
-    let str = ref "(joueur \n" in
+    let str = ref "(joueurs \n" in
     for i=0 to (Array.length e.R.noms)-1 do
       str := !str ^ "(" ^ e.R.noms.(i) ^ " " ^ (string_of_int(e.R.scores.(i)))  ^ " " ^ string_of_bool(e.R.pose.(i)) ^ " (" ^ mainToString (e.R.mains.(i)) ^ "))\n";	
     done;
-    str := !str ^ "(jeu \n" ^ combiListToString (e.R.table) ^ ")\n(pioche \n" ^ mainToString(e.R.pioche) ^ ")\n(tour " ^ string_of_int(e.R.tour) ^ ")";
+    str := !str ^ ")(jeu \n" ^ combiListToString (e.R.table) ^ ")\n(pioche \n" ^ mainToString(e.R.pioche) ^ ")\n(tour " ^ string_of_int(e.R.tour) ^ ")";
     !str;;
 
   (*
@@ -228,10 +227,11 @@ struct
     Sorties :   None ou une main et une liste de combinaisons
   *)
   let lit_coup (name : string)(main : R.main)(game : R.combi list)(pose : bool) =
-    print_endline ("\n ##### " ^ name ^ " #####\n Déjà posé : " ^ string_of_bool pose); 
-    print_endline (" Main : " ^ mainToString main ^ "\n");
-    print_endline (" Combinaisons en Jeu : \n" ^ combiListToString game);
-    print_endline (" Actions possibles : \n - Passer son tour (p)\n - Poser\n");
+    print_endline ("\n =============================================");
+    print_endline (" |     " ^ name ^ "      \n | Déjà posé : " ^ string_of_bool pose); 
+    print_endline (" | Main : " ^ mainToString main ^ "");
+    print_endline (" | Combinaisons en Jeu : " ^ combiListToString game);
+    print_endline (" =============================================\n");
     let inRead = read_line() in
     if inRead = "p" then
       None
@@ -286,9 +286,11 @@ struct
   let jouerUnCoup (e : R.etat)(nMain : R.main)(nTable : R.combi list) : R.etat =
     let joueur = e.R.tour in
     if (coup_valide (e.R.table) (e.R.mains.(joueur-1)) nTable nMain (e.R.pose.(joueur-1))) then
+      let _ = e.R.pose.(joueur-1) <- true; in
+      let _ = e.R.scores.(joueur-1) <- (R.points (e.R.table) (e.R.mains.(joueur-1)) nTable nMain); in
       if ((MultiEnsemble.nbElem nMain) < R.main_min) && (e.R.pioche <> []) then
           let (nMain2, nPioche) = piocherN e.R.pioche (R.main_min-(MultiEnsemble.nbElem nMain)) in
-          let _ = e.R.mains.(joueur-1) <- nMain2; in
+          let _ = e.R.mains.(joueur-1) <- (MultiEnsemble.union nMain nMain2); in
           {
             R.noms = e.R.noms;
             R.scores = e.R.scores;
@@ -300,15 +302,15 @@ struct
           }
       else
       let _ = e.R.mains.(joueur-1) <- nMain; in
-    {
-      R.noms = e.R.noms;
-      R.scores = e.R.scores;
-      R.mains = e.R.mains;
-      R.table = nTable;
-      R.pioche = e.R.pioche;
-      R.pose = e.R.pose;
-      R.tour = changerJoueur joueur (Array.length e.R.noms);
-    }
+      {
+        R.noms = e.R.noms;
+        R.scores = e.R.scores;
+        R.mains = e.R.mains;
+        R.table = nTable;
+        R.pioche = e.R.pioche;
+        R.pose = e.R.pose;
+        R.tour = changerJoueur joueur (Array.length e.R.noms);
+      }
     else
       failwith "Erreur de main" ;;
 
@@ -332,7 +334,7 @@ struct
     Sorties :   un booléen, résultat de l'analyse
   *)
   let finDePartie (e : R.etat) : bool =
-    R.fin_pioche_vide && (R.paquet = []) && (rechercheMainVide (e.R.mains))
+    R.fin_pioche_vide && (e.R.pioche = []) && (rechercheMainVide (e.R.mains))
 
   (*
     Type    :   R.etat -> (string * int) list
@@ -361,6 +363,9 @@ struct
     tour = e.R.tour in
     try
       if finDePartie e then
+        let _ = for i=0 to (Array.length e.R.noms)-1 do
+          e.R.scores.(i) <- (R.points_finaux (e.R.mains.(i)));
+        done; in
         createScoreList e
       else 
         let newEtat = lit_coup (joueursArray.(tour-1)) (mainsArray.(tour-1)) table (poseArray.(tour-1)) in
@@ -378,7 +383,7 @@ struct
         joue e;
       end
     | Load(file) -> print_endline ("Chargement de la partie du fichier : " ^ file ^ "\n"); joue e
-    | GameEnd -> print_endline ("Arrêt du jeu"); [];;
+    | GameEnd -> [];;
 
   (*
     Type    :   string list -> (string * int) list

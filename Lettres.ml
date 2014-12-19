@@ -61,7 +61,7 @@ struct
   let combi_valide (c : combi) : bool = 
     let s = charListToString c in 
     (Dictionnaire.member s (Dictionnaire.dico))
-    && (String.length s >= 3) && (valide s) ;;
+    && (String.length s >= 3) ;;
 
   (*
     Type    :   combi list -> int
@@ -112,7 +112,7 @@ struct
   let rec listValide (p : combi list) : bool =
     match p with
     | [] -> true
-    | t::q -> combi_valide t && listValide q ;;
+    | t::q -> (combi_valide t) && (listValide q) ;;
 
   (*
     Type    :   main -> combi list -> main -> bool
@@ -211,7 +211,7 @@ struct
 end;;
 
   (** TESTS **)
-  (*
+  (**
     let x = [['A';'B'; 'C'; 'D'; 'E'; 'F']; ['T'; 'E'; 'S'; 'T']; ['A'; 'H'; 'X']] ;;
     nbCombi x;;
 
@@ -229,5 +229,5 @@ end;;
     premier_coup_valide m x [('A', 1)] ;;
     let tok = [TGen "A"];;
     lit_valeur tok ;;
-  *)
+  **)
   

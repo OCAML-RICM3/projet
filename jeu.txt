@@ -1,0 +1,8 @@
+(joueurs 
+(Albert 0 false (C O L L I E R A R E T F L))
+(Damien 0 false (M A N G E * I E M M N A V))
+)(jeu 
+)
+(pioche 
+A A A A A A A B B C C C D E E E E E E E E E E E E E F G G H H I I I I L L L L L M M N N N N N O O O O O O O P P Q R R R R R R S S S S S T T T T T U U U U U U V W Y * *)
+(tour 1)

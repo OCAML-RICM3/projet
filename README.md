@@ -23,12 +23,13 @@ Nous avons de plus été dans l'obligation d'implémenter de nouvelles fonctions
 
 L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. Celle-ci sont fonctionnelles, et peuvent être utilisées dans d'autres modules externes.
 Bien qu'on soit arrivé à finir l'implémentation de l'ensemble des fonctions de ce module, la fonction to_list nous aura tenue en haleine pendant un certain. Pour la finir, nous avons du prendre connaissance des idées d'autres élèves et s'inspirer de leur façon de faire pour arriver à notre implémentation de la fonction.
-De plus, nous avons subis un petit piège assez déroutant, qui est que le dico contient que des mots avec des lettres en majuscules. Etant donné que la fonction d'ajout n'ajoutée que des mots étant en minuscules, on a du chercher un petit moment avant de trouver la source du problème.
+De plus, nous avons subis un petit piège assez déroutant, qui est que le dico contient que des mots avec des lettres en majuscules. Etant donné que la fonction d'ajout n'ajoutait que des mots étant en minuscules, on a du chercher un petit moment avant de trouver la source du problème.
 
 
 ### Module de sauvegarde et de lecture depuis un fichier
 
-L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. Malheureusement lors de l'utilisation du parser permettant de lire un fichier contenant une partie, il nous est impossible de l'utiliser. Malgré le fait de l'avoir testé avec des streams représentant des parties identique au format du fichier de sauvegarde, le parser ne marcher toujours pas.
+L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. L'ensemble des fonctionnalitées de chargement et de sauvegarde peuvent être utilisé dans le programme.
+Ainsi on peut charger une partie depuis un fichier, et sauvegarder une partie en cours.
 
 
 ### Module Lettres pour l'implémentation du "Rami des Lettres"
@@ -38,11 +39,11 @@ Le module peut être utilisé pour jouer.
 
 ### Module Rummikub pour l'implémentation du "Rami des Chiffres"
 
-TODO
+
 
 ### Module Jeu
 
-Le module jeu est entièrement implémenté et permet de jouer une partie de rami.
+Le module jeu est entièrement implémenté et permet de jouer une partie de rami. Cependant lors de l'avant dernier tour, il semble que les points ne s'ajouten pas correctement aux scores des joueurs.
 
 III. Utilisation
 -------------------------
@@ -51,11 +52,15 @@ Pour utiliser notre programme, on pourra tout d'abord commencer par compîler, e
 `make clean` suivie de la commande `make`
 
 Pour lancer le Rami des Lettres, utiliser la commande `./ramideslettres`
+Dans notre cas, nous avons décidé de charger un fichier depuis le dossier pour lancer la partie.
+
+On pourra vérifier du bon fonctionnement du programme avec les combinaisons suivantes :
+	- (L F T E R A)(C O L L I E R) pour Albert
+	- (V N M M E I)(C O L L I E R)(M A N G E * A) pour Damien
 
 Remarques :
 -----------
 
-Dans notre code, nous n'avons incorporé que l'utilisation du Rami des Lettres.
-Certaines erreurs n'ont pas pu être débugué et il y a encore des petites erreurs lors du déroulement d'une partie
+Dans notre code, nous n'avons incorporé que l'utilisation du Rami des Lettres. Ceci est du à une erreur dans Rummikub, cependant en appliquant le foncteur Jeu sur une version valide de Rummikub, on pourrait y jouer.
 
 
