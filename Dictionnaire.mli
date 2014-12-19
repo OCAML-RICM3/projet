@@ -8,4 +8,6 @@ module Dictionnaire :
     val mot : char Stream.t -> string
     val of_stream : char Stream.t -> dico
     val to_list : dico -> string list
+
+    val dico : dico
   end

@@ -1,4 +1,6 @@
-module type TJeu =
+open Regle
+
+module Jeu :
   functor (Rule: REGLE) -> sig
     val coup_valide : Rule.combi list (* jeu en cours *) -> Rule.main (* main du joueur *)
       -> Rule.combi list (* nouveau jeu *) -> Rule.main (* nouvelle main du joueur *) -> bool (* a posé *) -> bool
@@ -7,4 +9,5 @@ module type TJeu =
     val joue : Rule.etat -> (string * int) list
     val sauvegarde : Rule.etat -> string
     val chargement : char Stream.t -> Rule.etat
+    val nouvellePartie : string list -> (string * int) list
   end;;

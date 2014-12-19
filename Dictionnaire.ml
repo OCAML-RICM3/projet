@@ -115,6 +115,39 @@ struct
 			 !listRef
     in to_listSub d "" ;;
 
+    (* 
+      Fonctions fournies dans complement.ml
+    *)
+    let valide s =
+  ((String.length s) <> 0) &&
+    begin
+      let ret = ref true in
+      for i = 0 to (String.length s) - 1 do
+  let c = Char.code s.[i] in
+  ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
+      done;
+      !ret
+    end;;
+
+    (* Permet de charger un dictionnaire en mettant tous les mots en majuscules *)
+(* Les mots avec accents sont supprimés. *)
+(* La fonction add du dictionnaire doit avoir été déjà implantée. *)
+
+let dico =
+  let flux = open_in "dico_fr.txt" in
+  let mondico = ref (dico_vide()) in
+  try
+    begin
+      while true do
+  let l = String.uppercase (input_line flux) in
+  if (valide l) then
+    mondico := add l (!mondico);
+      done;
+      !mondico
+    end
+  with
+    End_of_file -> !mondico;;
+
 end;;
 
 
@@ -136,41 +169,6 @@ end;;
   remove x dico_vide ;;
   member "" dico_vide;;
   member x dico_vide ;;
-
-let valide s =
-  ((String.length s) <> 0) &&
-    begin
-      let ret = ref true in
-      for i = 0 to (String.length s) - 1 do
-	let c = Char.code s.[i] in
-	ret := (!ret) && (c >= (Char.code 'A')) && (c <= (Char.code 'Z'))
-      done;
-      !ret
-    end;;
-
-(* Permet de charger un dictionnaire en mettant tous les mots en majuscules *)
-(* Les mots avec accents sont supprimés. *)
-(* La fonction add du dictionnaire doit avoir été déjà implantée. *)
-
-let rec affiche (l : string list) = 
-  match l with
-  | [] -> ""
-  | t::q -> t^"\n"^(affiche q);;
-
-let dico =
-  let flux = open_in "dico_fr.txt" in
-  let mondico = ref (dico_vide()) in
-  try
-    begin
-      while true do
-	let l = String.uppercase (input_line flux) in
-	if (valide l) then
-	  mondico := add l (!mondico);
-      done;
-      !mondico
-    end
-  with
-    End_of_file -> !mondico;;
 
   let str = Stream.of_string "ab\nabc\naaa\nabd\nchat\n" ;;
   mot str;;

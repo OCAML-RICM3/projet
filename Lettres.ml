@@ -62,7 +62,7 @@ struct
   *)
   let combi_valide (c : combi) : bool = 
    let s = charListToString c in 
-   (Dictionnaire.member s (Dictionnaire.dico_vide()))
+   (Dictionnaire.member s (Dictionnaire.dico))
    && (String.length s >= 3) && (valide s) ;;
 
   (*

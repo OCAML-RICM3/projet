@@ -15,4 +15,7 @@ sig
   val nbElem : 'a mset -> int
   val nbDifference : 'a mset -> 'a mset -> int
 
+  val elemN : 'a mset -> int -> 'a
+  val rand : 'a mset -> 'a
+
 end;;

@@ -1,17 +1,15 @@
 (*#load "dynlink.cma"*)
 (*#load "camlp4o.cma"*)
 
-(*#use "MultiEnsemble.ml" ;;
-#use "Dictionnaire.ml" ;;
-#use "regle.mli" ;;
-#use "Lettres.ml" ;;*)
+(*#use "MultiEnsemble.ml" ;; *)
+(*#use "regle.mli" ;;*)
+(*#use "Lettres.ml" ;;*)
 
 open MultiEnsemble
 open Regle
 
 module LoadSaveRami = functor (R : REGLE) ->
 struct
-
   type t = R.t
   type combi = R.combi
   type main = R.main
@@ -130,7 +128,7 @@ struct
 		Sorties :   la combinaison extraite
   *)
   let tokenToCombi = parser
-		| [< 'LPar; combi = cl; 'RPar; _ >] -> combi ;;
+		| [< 'LPar; combi = cl; 'RPar>] -> combi ;;
 
 	(*
 		Type    :   token Stream.t -> combi list
@@ -140,7 +138,7 @@ struct
   *)
   let rec tokenToCombiList = parser
 		| [< combi = tokenToCombi; s >] -> combi::(tokenToCombiList s)
-		| [< >] -> [] ;; 
+		| [< >] -> [] ;;
 
 	(*
 		Type    :   token Stream.t -> string
@@ -177,6 +175,9 @@ struct
   *)
   let j = parser
 		| [< 'LPar; name = ident; score = hornerTok; pose = b; main = tokenToCombi; 'RPar >] -> Player(name, score, pose, fromListToMain(main))
+	
+	let readMainCombiList = parser
+		| [< main = tokenToCombi; list = tokenToCombiList >] -> (fromListToMain(main), list)
 
 	(*
 		Type    :   token Stream.t -> joueur list

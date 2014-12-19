@@ -123,6 +123,17 @@ struct
   let nbDifference (a : 'a mset)(b : 'a mset) : int =
     nbElem (difference a b) ;;
 
+ (*'a mset -> int -> 'a*)
+  let rec elemN (a : 'a mset)(n : int) : 'a =
+    match a with
+    | [] -> failwith "Cet element n'existe pas."
+    | (v, nb)::q -> if n = 0 then v 
+      else elemN (removeOcc (v,1) ((v, nb)::q)) (n-1) ;;
+
+  (* 'a mset -> 'a*)
+  let rand (a : 'a mset) : 'a =
+    elemN a (Random.int (nbElem a)) ;;
+
 end;;
 
   (** TESTS **)
