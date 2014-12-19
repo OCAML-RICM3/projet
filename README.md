@@ -28,14 +28,13 @@ De plus, nous avons subis un petit piège assez déroutant, qui est que le dico 
 
 ### Module de sauvegarde et de lecture depuis un fichier
 
-Pour le moment implémentation de la lecture (non complète)
+L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. Malheureusement lors de l'utilisation du parser permettant de lire un fichier contenant une partie, il nous est impossible de l'utiliser. Malgré le fait de l'avoir testé avec des streams représentant des parties identique au format du fichier de sauvegarde, le parser ne marcher toujours pas.
 
 
 ### Module Lettres pour l'implémentation du "Rami des Lettres"
 
 L'ensemble des fonctionnalités demandées ont pu être implémentées et testées. Celle-ci sont fonctionnelles, et peuvent être utilisées dans d'autres modules externes.
-
-Sauf le calcul de points, a faire !
+Le module peut être utilisé pour jouer.
 
 ### Module Rummikub pour l'implémentation du "Rami des Chiffres"
 
@@ -43,12 +42,20 @@ TODO
 
 ### Module Jeu
 
-TODO
+Le module jeu est entièrement implémenté et permet de jouer une partie de rami.
 
 III. Utilisation
 -------------------------
 
 Pour utiliser notre programme, on pourra tout d'abord commencer par compîler, en utilisant la commande :
 `make clean` suivie de la commande `make`
+
+Pour lancer le Rami des Lettres, utiliser la commande `./ramideslettres`
+
+Remarques :
+-----------
+
+Dans notre code, nous n'avons incorporé que l'utilisation du Rami des Lettres.
+Certaines erreurs n'ont pas pu être débugué et il y a encore des petites erreurs lors du déroulement d'une partie
 
 
